@@ -141,7 +141,8 @@ function member(state){
         const token = tokens.next();
         
         if(token.done)
-            throw 'Missing Member End';
+            return;
+            // throw 'Missing Member End';
         
         const { type } = token.value;
         
