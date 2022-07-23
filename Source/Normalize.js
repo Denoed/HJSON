@@ -151,14 +151,32 @@ function * forwardCombine(tokens){
             ) continue;
         
             break;
-        case 'Newline' :
-            
+        case 'Comma' :
+        
             if(
                 nowType === 'Newline' ||
                 nowType === 'Space'
             ) continue;
             
             break;
+                
+        case 'Newline' :
+            
+            if(
+                nowType === 'Newline' ||
+                nowType === 'Space' ||
+                nowType === 'Comma'
+            ) continue;
+            
+            break;
+        case 'Space' :
+        
+            if(
+                nowType === 'Comma'
+            ){
+                before = { type : 'Comma' }
+                continue;
+            }
         }
         
         yield before.value;

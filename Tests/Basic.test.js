@@ -37,6 +37,8 @@ const model = {
     
     research : {
         
+        name : '\ntesting \'wow\'\n' ,
+        
         parent : 'nuclearFacility' ,
         
         objectives: [{
