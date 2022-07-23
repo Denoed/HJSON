@@ -1,6 +1,7 @@
 
 import Tokenizer from './Tokenizer.js'
 import normalize from './Normalize.js'
+import parse from './Parse.js'
 
 
 const { log } = console;
@@ -21,7 +22,7 @@ export default function decode(string){
     
     object(state);
     
-    return state.object;
+    return parse(state.object);
 }
 
 
