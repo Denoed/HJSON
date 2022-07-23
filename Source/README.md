@@ -1,22 +1,22 @@
 
 # HJSON   [![Badge License]][License]
 
-*A parser / stringifier for **[HJSON]**.*
+A parser / stringifier for **[HJSON]**.
 
 <br>
 
 ## Import
 
-```JavaScript
+```js
 import HJson from 'https://deno.land/x/hjson/mod.ts'
 ```
 
 <br>
 <br>
 
-## Parsing
+## Parse
 
-```JavaScript
+```js
 import { parse } from 'https://deno.land/x/hjson/mod.ts'
 
 const { log } = console;
@@ -48,9 +48,38 @@ log(parse(hjson));
 <br>
 <br>
 
-## Stringification
+## Stringify
 
-**Work In Progress**
+```js
+import { stringify } from 'https://deno.land/x/hjson/mod.ts'
+
+const { log } = console;
+
+const object = {
+    some : 3 ,
+    variables : [ 'with' , 'a' , 'lot' ] ,
+    inside : { them : 9 }
+}
+
+log(stringify(hjson));
+
+
+/*
+ *  { 
+ *      some : 3
+ *  
+ *      variables : [
+ *          with
+ *          a
+ *          lot
+ *      ]
+ *  
+ *      inside : {
+ *          them : 9
+ *      }
+ *  }
+ */
+```
 
 <br>
 
