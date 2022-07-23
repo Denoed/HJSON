@@ -49,15 +49,14 @@ const model = {
 }
 
 
-import { assertEquals } from 'https://deno.land/std@0.149.0/testing/asserts.ts';
-import { parse } from '../Source/mod.ts'
+import { assertEquals } from 'Assert';
+// import { parse } from '../Source/mod.ts'
+import HJSON from '../Source/mod.ts'
 
 
 Deno.test('Generic Parsing Test',() => {
 
-    const parsed = parse(raw);
-
-    console.log(parsed);
+    const parsed = HJSON.parse(raw);
 
     assertEquals(parsed,model);
 });

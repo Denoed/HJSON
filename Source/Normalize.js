@@ -164,9 +164,15 @@ function * forwardCombine(tokens){
             
             if(
                 nowType === 'Newline' ||
-                nowType === 'Space' ||
-                nowType === 'Comma'
+                nowType === 'Space'
             ) continue;
+            
+            if(
+                nowType === 'Comma'
+            ){
+                before = { type : 'Comma' }
+                continue;
+            }
             
             break;
         case 'Space' :

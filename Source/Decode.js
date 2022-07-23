@@ -9,7 +9,7 @@ const { log } = console;
 
 export default function decode(string){
     
-    log([ ... normalize(new Tokenizer(string).iterator()) ]);
+    // log([ ... normalize(new Tokenizer(string).iterator()) ]);
     
     const tokens = normalize(new Tokenizer(string).iterator());
     
@@ -28,7 +28,7 @@ export default function decode(string){
 
 function object(state){
     
-    log('\nObject\n')
+    // log('\nObject\n')
     
     const { object , tokens } = state;
             
@@ -58,7 +58,7 @@ function object(state){
 
 function member(state){
     
-    log('\nMember\n')
+    // log('\nMember\n')
     
     const { tokens , parent , key } = state;
     
@@ -158,7 +158,7 @@ function member(state){
 
 function array(state){
     
-    log('\nArray\n')
+    // log('\nArray\n')
 
     const { array , tokens } = state;
             
@@ -218,6 +218,8 @@ function array(state){
                 return;
             case 'Newline' :
                 break;
+            case 'Comma' :
+                break;
             default:
                 throw `Invalid Array Value Token ${ token.value.type }`;
             }
@@ -232,14 +234,14 @@ function array(state){
                 
             const { type  } = token.value;
         
-            if(type === 'Comma')
-                break;
+            if(
+                type === 'Comma' ||
+                type === 'Newline'
+            ) break;
         
             switch(type){
             case 'ArrayEnd' :
                 return;
-            case 'Newline' :
-                break;
             default:
                 throw `Invalid Array Seperator Token ${ token.value.type }`;
             }

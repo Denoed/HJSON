@@ -14,7 +14,7 @@ export default function parse(object){
             object[key] = string(value);
             continue;
         case 'array' :
-            array(value);
+            parse(value);
             continue;
         case 'object' :
             parse(value);
@@ -36,7 +36,7 @@ function string(value){
     
     switch(true){
     case is_bool.test(value):
-        return Boolean(value);
+        return value === 'true';
     case is_number.test(value):
         return parseFloat(value);
     default:
@@ -47,9 +47,4 @@ function string(value){
         
         return value;        
     }
-}
-
-function array(value){
-    
-    
 }
