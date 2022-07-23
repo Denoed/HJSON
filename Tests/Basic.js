@@ -54,8 +54,8 @@ import { parse } from '../Source/mod.ts'
 Deno.test('Generic Parsing Test',() => {
 
     const parsed = parse(raw);
-    
+
     console.log(parsed);
-    
+
     assertEquals(parse,model);
 });

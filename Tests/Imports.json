@@ -1,0 +1,10 @@
+{
+    "imports" : {
+        "Assert" : "https://deno.land/std@0.149.0/testing/asserts.ts" ,
+        
+        "Tokenizer" : "../Source/Tokenizer.js" ,
+        "Parser" : "../Source/mod.ts" ,
+        
+        "TokenTest" : "./Tokens/Test.js"
+    }
+}

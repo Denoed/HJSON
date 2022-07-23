@@ -12,7 +12,7 @@ const tokens = prepare({
     '\\[' : 'ArrayStart' ,
     '\\]' : 'ArrayEnd' ,
     ',' : 'Comma' ,
-    ':' : 'KeyValueDelimiter'
+    ':' : 'Colon'
 })
 
 
@@ -74,5 +74,9 @@ export default class Tokenizer {
             }
                 
         throw `No Token Found for '${ string }'`;
+    }
+    
+    tokens(){
+        return [ ... this ];
     }
 }
