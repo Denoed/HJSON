@@ -6,8 +6,6 @@ const hjson = '{}';
 
 
 const tokens = [{
-    type : 'ObjectStart'
-},{
     type : 'ObjectEnd'
 }];
 

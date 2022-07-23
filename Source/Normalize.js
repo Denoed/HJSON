@@ -1,9 +1,23 @@
 
 
 export default function * normalize(tokens){
-    yield * reduce(trim(forwardCombine(multilineJoiner(multiline(tokens)))));
+    yield * reduce(unwrap(trim(forwardCombine(multilineJoiner(multiline(tokens))))));
 }
 
+
+function * unwrap(tokens){
+    
+    let a = false
+    
+    for(const token of tokens)
+        if(a)
+            yield token;
+        else
+        if(![ 'Newline' , 'Space' , 'ObjectStart' ].includes(token.type)){
+            yield token;
+            a = true;
+        }
+}
 
 function * multilineJoiner(tokens){
     
@@ -15,14 +29,15 @@ function * multilineJoiner(tokens){
 
 function combineMultiline(multiline){
     
+    const unindent = (match) => 
+        match.substring(multiline.indent);
+    
     const value = multiline.value
         .map(({ value }) => value)
         .join('')
         .replace(/^[^\S\n]*\n/,'')
         .replace(/\n[^\S\n]*$/,'')
-        .replace(/^[^\S\n]+/gm,(match) => {
-            return match.substring(multiline.indent);
-        });
+        .replace(/^[^\S\n]+/gm,unindent);
     
     return { type : 'Multiline' , value };
 }
@@ -33,8 +48,8 @@ function * multiline(tokens){
     
     if(before.done)
         return;
-        
-        before = before.value;
+    
+    before = before.value;
     
     let open = false;
     let parts = [];
@@ -69,9 +84,6 @@ function * multiline(tokens){
                     
                 continue;
             } 
-            // else {
-            //     yield { type , value };
-            // }
         }
         
         if(before)

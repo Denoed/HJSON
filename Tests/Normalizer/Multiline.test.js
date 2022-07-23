@@ -18,8 +18,6 @@ const hjson =
 
 
 const tokens = [{
-    type : 'ObjectStart'
-},{
     type : 'Word' ,
     value : 'multi'
 },{

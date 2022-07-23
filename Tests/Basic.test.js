@@ -57,5 +57,5 @@ Deno.test('Generic Parsing Test',() => {
 
     console.log(parsed);
 
-    assertEquals(parse,model);
+    assertEquals(parsed,model);
 });
