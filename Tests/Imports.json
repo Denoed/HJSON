@@ -3,8 +3,10 @@
         "Assert" : "https://deno.land/std@0.149.0/testing/asserts.ts" ,
         
         "Tokenizer" : "../Source/Tokenizer.js" ,
+        "Normalize" : "../Source/Normalize.js" ,
         "Parser" : "../Source/mod.ts" ,
         
+        "NormalizerTest" : "./Normalizer/Test.js" ,
         "TokenTest" : "./Tokens/Test.js"
     }
 }

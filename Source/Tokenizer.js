@@ -75,8 +75,4 @@ export default class Tokenizer {
                 
         throw `No Token Found for '${ string }'`;
     }
-    
-    tokens(){
-        return [ ... this ];
-    }
 }

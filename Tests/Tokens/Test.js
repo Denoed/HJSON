@@ -11,6 +11,6 @@ export function assertSameTokens(hjson,tokens){
 }
 
 function tokenize(string){
-    return new Tokenizer(string).tokens();
+    return [ ... new Tokenizer(string) ];
 }
 
