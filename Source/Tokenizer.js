@@ -3,8 +3,8 @@ const { iterator } = Symbol
 
 
 const tokens = prepare({
+    '\'\'\'' : 'Multiline' ,
     '[^\\s,:\\[\\]\\{\\}]+' : 'Word' ,
-    '\'\'\'' : 'MultilineStringBound' ,
     '[^\\S\\n]+' : 'Space' ,
     '(\\r)?\\n' : 'Newline' ,
     '\\{' : 'ObjectStart' ,
