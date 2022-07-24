@@ -14,9 +14,10 @@ const tokens = [
     [ 'Colon'        , /^:/ ] ,
     
     [ 'Newline'      , /^\r?\n/ ] ,
-    [ 'Space'        , /^[\s]+/ , 0 ] ,
+    
+    [ 'MultiString'  , /^[^\S\n]*'''[\s\S]*?'''/u , 0 ] ,
+    [ 'Space'        , /^[^\S\n]+/ , 0 ] ,
         
-    [ 'MultiString'  , /^'''([\s\S]*?)'''/u , 1 ] ,
     [ 'MultiComment' , /^\/\*([\s\S]*?)\*\//u ] ,
     [ 'SingleString' , /^'(([^\\]|(\\["'\\/bfnrt])|(\\u\d{4}))*?)'/ , 1 ] ,
     [ 'DoubleString' , /^"(([^\\]|(\\["'\\/bfnrt])|(\\u\d{4}))*?)"/ , 1 ] ,
@@ -60,8 +61,6 @@ export default class Tokenizer {
             if(regex.test(string)){
                 
                 const found = string.match(regex);
-                
-                console.log(type,found);
                 
                 this.#string = string.substring(found[0].length);
                 

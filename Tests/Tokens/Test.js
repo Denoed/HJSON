@@ -12,7 +12,7 @@ export function assertSameTokens(hjson,tokens){
     
     const parsed = tokenize(hjson);
     
-    log(parsed);
+    // log(parsed);
     
     assertEquals(parsed,tokens);
 }
