@@ -9,41 +9,30 @@ const hjson =
 
 
 const tokens = [{
-    type : 'ObjectStart' ,
-    value : '{'
+    type : 'ObjectStart'
 },{
-    type : 'Newline' ,
-    value : '\n'
+    type : 'Newline'
 },{
     type : 'Space' ,
     value : '    '
 },{
-    type : 'Word' ,
+    type : 'Member' ,
     value : 'member'
 },{
     type : 'Space' ,
     value : ' '
 },{
-    type : 'Colon' ,
-    value : ':'
+    type : 'Colon'
 },{
     type : 'Space' ,
     value : ' '
 },{
-    type : 'Word' ,
-    value : '\'String'
+    type : 'SingleString' ,
+    value : 'String Value'
 },{
-    type : 'Space' ,
-    value : ' '
+    type : 'Newline'
 },{
-    type : 'Word' ,
-    value : 'Value\''
-},{
-    type : 'Newline' ,
-    value : '\n'
-},{
-    type : 'ObjectEnd' ,
-    value : '}'
+    type : 'ObjectEnd'
 }];
 
 

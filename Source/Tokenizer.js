@@ -2,43 +2,38 @@
 const { iterator } = Symbol
 
 
-const tokens = prepare({
-    '\'\'\'' : 'Multiline' ,
-    '[^\\s,:\\[\\]\\{\\}]+' : 'Word' ,
-    '[^\\S\\n]+' : 'Space' ,
-    '(\\r)?\\n' : 'Newline' ,
-    '\\{' : 'ObjectStart' ,
-    '\\}' : 'ObjectEnd' ,
-    '\\[' : 'ArrayStart' ,
-    '\\]' : 'ArrayEnd' ,
-    ',' : 'Comma' ,
-    ':' : 'Colon'
-})
-
-
-function prepare(tokens){
-    return Object
-        .entries(tokens)
-        .map(toToken);
-}
-
-function toToken([ pattern , token ]){
-    return [ toRegex(pattern) , token ];
-}
-
-function toRegex(pattern){
-    return new RegExp(`^(${ pattern })`,'u');
-}
+const tokens = [
+    
+    [ 'ObjectStart'  , /^\{/ ] ,
+    [ 'ObjectEnd'    , /^\}/ ] ,
+    
+    [ 'ArrayStart'   , /^\[/ ] ,
+    [ 'ArrayEnd'     , /^\]/ ] ,
+    
+    [ 'Comma'        , /^,/ ] ,
+    [ 'Colon'        , /^:/ ] ,
+    
+    [ 'Newline'      , /^\r?\n/ ] ,
+    [ 'Space'        , /^[\s]+/ , 0 ] ,
+        
+    [ 'MultiString'  , /^'''([\s\S]*?)'''/u , 1 ] ,
+    [ 'MultiComment' , /^\/\*([\s\S]*?)\*\//u ] ,
+    [ 'SingleString' , /^'(([^\\]|(\\["'\\/bfnrt])|(\\u\d{4}))*?)'/ , 1 ] ,
+    [ 'DoubleString' , /^"(([^\\]|(\\["'\\/bfnrt])|(\\u\d{4}))*?)"/ , 1 ] ,
+    [ 'Comment'      , /^(#)|(\/\/)([^\n]*)/u ] ,
+    [ 'Member'       , /^[^\s,:\[\]\{\}][^\s]*/ , 0 ] ,
+    [ 'Quoteless'    , /^[^\s,:\[\]\{\}][^\n]*/ , 0 ]
+]
 
 
 export default class Tokenizer {
 
-    #position;
+    #position = 0;
     #string;
     
     constructor(string){
-        this.#position = 0;
-        this.#string = string;
+        this.#string = string
+            .trim();
     }
     
     
@@ -61,16 +56,21 @@ export default class Tokenizer {
         
         const string = this.#string
         
-        for(const [ regex , type ] of tokens)
+        for(const [ type , regex , match ] of tokens)
             if(regex.test(string)){
                 
-                const match = string.match(regex);
+                const found = string.match(regex);
                 
-                this.#string = string.substring(match[0].length);
+                console.log(type,found);
                 
-                const [ _ , value ] = match;
+                this.#string = string.substring(found[0].length);
                 
-                return { type , value }
+                const token = { type };
+                
+                if(match != null)
+                    token.value = found[match];
+                
+                return token;
             }
                 
         throw `No Token Found for '${ string }'`;

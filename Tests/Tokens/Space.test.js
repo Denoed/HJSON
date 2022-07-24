@@ -26,10 +26,7 @@ const hjson = Object
     .join('');
     
 
-const tokens = [{
-    type : 'Space' ,
-    value : hjson
-}];
+const tokens = [];
 
 test('String made of whitespace',() => {
     
