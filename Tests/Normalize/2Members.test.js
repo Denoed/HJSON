@@ -12,27 +12,23 @@ const hjson =
 
 
 const tokens = [{
-    type : 'Word' ,
+    type : 'Member' ,
     value : 'member'
 },{
     type : 'Colon'
 },{
-    type : 'Word' ,
-    value : '\'String Value\''
+    type : 'String' ,
+    value : 'String Value'
 },{
     type : 'Newline'
 },{
-    type : 'Word' ,
+    type : 'Member' ,
     value : 'other'
 },{
     type : 'Colon'
 },{
-    type : 'Word' ,
+    type : 'String' ,
     value : '333.3'
-},{
-    type : 'Newline'
-},{
-    type : 'ObjectEnd'
 }];
 
 

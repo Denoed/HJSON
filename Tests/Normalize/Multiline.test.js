@@ -8,7 +8,7 @@ const hjson =
     
         '''
         
-         this is 
+         this is \\n
         
     a 
         
@@ -18,17 +18,13 @@ const hjson =
 
 
 const tokens = [{
-    type : 'Word' ,
+    type : 'Member' ,
     value : 'multi'
 },{
     type : 'Colon'
 },{
-    type : 'Multiline' ,
-    value : '\n this is \n\na \n\nmultiline string'
-},{
-    type : 'Newline'
-},{
-    type : 'ObjectEnd'
+    type : 'String' ,
+    value : '\n this is \\n\n\na \n\nmultiline string'
 }];
 
 

@@ -15,13 +15,6 @@ const hjson =
 
 
 const tokens = [{
-    type : 'ObjectStart'
-},{
-    type : 'Newline'
-},{
-    type : 'Space' ,
-    value : '    '
-},{
     type : 'Member' ,
     value : 'multiline-value'
 },{
@@ -42,10 +35,6 @@ const tokens = [{
 },{
     type : 'MultiString' ,
     value : `        '''\n        Tes\nting\n        \n        this\n        '''`
-},{
-    type : 'Newline'
-},{
-    type : 'ObjectEnd'
 }];
 
 

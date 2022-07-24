@@ -16,14 +16,15 @@ const tokens = [
     [ 'Newline'      , /^\r?\n/ ] ,
     
     [ 'MultiString'  , /^[^\S\n]*'''[\s\S]*?'''/u , 0 ] ,
+    [ 'MultiLine'    , /^[^\S\n]*'''[^\n]*?'''/u , 0 ] ,
     [ 'Space'        , /^[^\S\n]+/ , 0 ] ,
         
     [ 'MultiComment' , /^\/\*([\s\S]*?)\*\//u ] ,
-    [ 'SingleString' , /^'(([^\\]|(\\["'\\/bfnrt])|(\\u\d{4}))*?)'/ , 1 ] ,
-    [ 'DoubleString' , /^"(([^\\]|(\\["'\\/bfnrt])|(\\u\d{4}))*?)"/ , 1 ] ,
+    [ 'SingleString' , /^'(([^\\]|(\\["'\\/bfnrt])|(\\u\d{4}))*?)'/ , 0 ] ,
+    [ 'DoubleString' , /^"(([^\\]|(\\["'\\/bfnrt])|(\\u\d{4}))*?)"/ , 0 ] ,
     [ 'Comment'      , /^(#)|(\/\/)([^\n]*)/u ] ,
-    [ 'Member'       , /^[^\s,:\[\]\{\}][^\s]*/ , 0 ] ,
-    [ 'Quoteless'    , /^[^\s,:\[\]\{\}][^\n]*/ , 0 ]
+    [ 'Member'       , /^([^\s,:\[\]\{\}]*)[\s]*:/ , 1 ] ,
+    [ 'Quoteless'    , /^[^\n,:\[\]\{\}][^\n,]*/ , 0 ] ,
 ]
 
 
@@ -34,7 +35,8 @@ export default class Tokenizer {
     
     constructor(string){
         this.#string = string
-            .trim();
+        .replace(/^[\s]*{?[\s]*/,'')
+        .replace(/[\s]*}?[\s]*$/,'');
     }
     
     
@@ -62,7 +64,7 @@ export default class Tokenizer {
                 
                 const found = string.match(regex);
                 
-                this.#string = string.substring(found[0].length);
+                this.#string = string.substring(found[match ?? 0].length);
                 
                 const token = { type };
                 

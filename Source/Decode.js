@@ -15,14 +15,19 @@ export default function decode(string){
     
     // log([ ... tokens ]);
     
-    const state = {
-        tokens : tokens ,
-        object : {}
+    try {
+        const state = {
+            tokens : tokens ,
+            object : {}
+        }
+        
+        object(state);
+        
+        return parse(state.object);
+    } catch (e) {
+        log([ ...normalize(new Tokenizer(string).iterator()) ]);
+        throw e;
     }
-    
-    object(state);
-    
-    return parse(state.object);
 }
 
 
@@ -43,7 +48,7 @@ function object(state){
         switch(token.value.type){
         case 'ObjectEnd' :
             return;
-        case 'Word' :
+        case 'Member' :
             member({
                 parent : object ,
                 tokens : tokens ,
@@ -74,10 +79,7 @@ function member(state){
         if(type === 'Colon')
             break;
             
-        switch(type){
-        default:
-            throw `Invalid Member Seperator Token ${ token.value.type }`;
-        }
+        throw `Invalid Member Seperator Token ${ type }`;
     }
     
     while(true){
@@ -89,7 +91,7 @@ function member(state){
         
         const { type } = token.value;
         
-        if([ 'Multiline' , 'Word' ].includes(type)){
+        if([ 'String' ].includes(type)){
             
             const { value } = token.value;
             
@@ -177,7 +179,7 @@ function array(state){
                 
             const { type } = token.value;
         
-            if(type === 'Word'){
+            if(type === 'String'){
                 array.push(token.value.value);
                 break;
             }

@@ -1,110 +1,74 @@
 
+const { log } = console;
+
 
 export default function * normalize(tokens){
-    yield * reduce(unwrap(trim(forwardCombine(multilineJoiner(multiline(tokens))))));
+
+    yield * 
+        forwardCombine(
+        prepareQuotedString(
+        prepareMultiLines(
+        prepareMultiStrings(
+            tokens
+        ))));
 }
 
 
-function * unwrap(tokens){
-    
-    let a = false
-    
+function * select(tokens,tokenType,callback){
     for(const token of tokens)
-        if(a)
-            yield token;
-        else
-        if(![ 'Newline' , 'Space' , 'ObjectStart' ].includes(token.type)){
-            yield token;
-            a = true;
-        }
-}
-
-function * multilineJoiner(tokens){
-    
-    for(const token of tokens)
-        yield (token.type === 'Multiline')
-            ? combineMultiline(token)
+        yield (token.type === tokenType)
+            ? callback(token.value)
             : token ;
 }
 
-function combineMultiline(multiline){
-    
-    const unindent = (match) => 
-        match.substring(multiline.indent);
-    
-    const value = multiline.value
-        .map(({ value }) => value)
-        .join('')
-        .replace(/^[^\S\n]*\n/,'')
-        .replace(/\n[^\S\n]*$/,'')
-        .replace(/^[^\S\n]+/gm,unindent);
-    
-    return { type : 'Multiline' , value };
-}
-
-function * multiline(tokens){
-    
-    let before = tokens.next();
-    
-    if(before.done)
-        return;
-    
-    before = before.value;
-    
-    let open = false;
-    let parts = [];
-    let indent = 0;
-    
-    for(let { type , value } of tokens){
-        if(open){
-            if(type === 'Multiline'){
-                open = false
-                yield { type : 'Multiline' , value : parts , indent };
-                
-                before = null;
-                continue;
-            } else {
-                
-                
-                parts.push({
-                    type , value 
-                });
-                
-                continue;
-            }
-        } else {
-            if(type === 'Multiline'){
-                open = true;
-                parts = [];
-                
-                indent = 0;
-                
-                if(before?.type === 'Space')
-                    indent = before.value.length;
-                    
-                continue;
-            } 
+function * prepareMultiLines(tokens){
+    yield * select(tokens,'MultiLine',(value) => {
+        
+        const indent = value
+            .match(/^[\s]*/)[0]
+            .length;
+            
+        value = value
+            .trim()
+            .slice(3,-3)
+            
+        return {
+            type : 'String' ,
+            value
         }
-        
-        if(before)
-            yield before;
-        
-        before = { type , value };
-    }
-    
-    if(before)
-        yield before;
+    })
 }
 
-function * trim(tokens){
-    
-    for(let { type , value } of tokens){
+function * prepareMultiStrings(tokens){
+    yield * select(tokens,'MultiString',(value) => {
         
-        if(type === 'Word')
-            value = value.trim();
-        
-        yield { type , value }
-    }
+        const indent = value
+            .match(/^[\s]*/)[0]
+            .length;
+            
+        const detent = new RegExp(`^\\s{1,${ indent }}`,'gm');
+            
+        value = value
+            .trim()
+            .slice(3,-3)
+            .replace(/^[^\S\n]*\n/,'')
+            .replace(/\n[^\S\n]*$/,'')
+            .replace(detent,'')
+            
+        return {
+            type : 'String' ,
+            value
+        }
+    })
+}
+
+function * prepareQuotedString(tokens){
+    for(const token of tokens)
+        yield ([ 'SingleString' , 'DoubleString' ].includes(token.type))
+            ? { type : 'String' , value : token.value.slice(1,-1) }
+            : (token.type === 'Quoteless')
+            ? { type : 'String' , value : token.value.trim() }
+            : token ;
 }
 
 
@@ -114,7 +78,7 @@ function * forwardCombine(tokens){
     
     while (!before.done) {
         
-        const now = tokens.next();
+        let now = tokens.next();
         
         if(now.done)
             break;
@@ -131,19 +95,16 @@ function * forwardCombine(tokens){
                 nowType === 'Newline'
             ) continue;
             
-            break;
-        case 'Word' :
-        
             if(
-                nowType === 'Space' ||
-                nowType === 'Word'
+                nowType === 'Member'
             ){
-                before.value.value += now.value.value;
-                continue;
+                now = { value : { type : 'String' , value : now.value.value } }
             }
             
             break;
+
         case 'ObjectStart' :
+        case 'ArrayStart' :
         
             if(
                 nowType === 'Space' ||
@@ -161,7 +122,7 @@ function * forwardCombine(tokens){
             break;
                 
         case 'Newline' :
-            
+
             if(
                 nowType === 'Newline' ||
                 nowType === 'Space'
@@ -170,7 +131,7 @@ function * forwardCombine(tokens){
             if(
                 nowType === 'Comma'
             ){
-                before = { type : 'Comma' }
+                before = { value : { type : 'Comma' } }
                 continue;
             }
             
@@ -178,10 +139,36 @@ function * forwardCombine(tokens){
         case 'Space' :
         
             if(
-                nowType === 'Comma'
+                nowType === 'Space'
+            ) continue;
+            
+            if(
+                nowType === 'Colon'
             ){
-                before = { type : 'Comma' }
+                before = { value : { type : 'Colon' } }
                 continue;
+            }
+            
+            break;
+        case 'String':
+        
+            if(
+                nowType === 'Colon'
+            ){
+                before = { value : { type : 'Member' , value : before.value.value } }
+            }
+        
+            break;
+        case 'Member':
+            
+            if(
+                nowType === 'Space'
+            ) continue;
+        
+            if(
+                nowType !== 'Colon'
+            ){
+                before = { value : { type : 'String' , value : before.value.value } }
             }
         }
         
@@ -191,23 +178,4 @@ function * forwardCombine(tokens){
     
     if(!before.done)
         yield before.value;
-}
-
-
-const complex = [ 'Word' , 'Space' , 'Multiline' ];
-
-const isSimple = ({ type }) =>
-    ! complex.includes(type);
-
-function * reduce(tokens){
-    for(const token of tokens)
-        yield removeRedundantValues(token);
-}
-
-function removeRedundantValues(token){
-    
-    if(isSimple(token))
-        delete token.value;
-    
-    return token;
 }

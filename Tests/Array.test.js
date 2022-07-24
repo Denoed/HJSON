@@ -1,5 +1,5 @@
 
-const raw = `{
+const raw = `
     
     AnArray : [
         10,
@@ -11,7 +11,7 @@ const raw = `{
         
         5
     ]
-}
+
 
 
 `

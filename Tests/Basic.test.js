@@ -54,7 +54,7 @@ import { assertEquals } from 'Assert';
 import HJSON from '../Source/mod.ts'
 
 
-Deno.test('Generic Parsing Test',() => {
+Deno.test('Basic Parsing Test',() => {
 
     const parsed = HJSON.parse(raw);
 

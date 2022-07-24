@@ -5,11 +5,7 @@ import { assertSameTokens , test } from 'TokenTest';
 const hjson = '{}';
 
 
-const tokens = [{
-    type : 'ObjectStart'
-},{
-    type : 'ObjectEnd'
-}];
+const tokens = [];
 
 
 test('Optional outer brackets',() => {

@@ -6,7 +6,7 @@
         "Normalize" : "../Source/Normalize.js" ,
         "Parser" : "../Source/mod.ts" ,
         
-        "NormalizerTest" : "./Normalizer/Test.js" ,
+        "NormalizerTest" : "./Normalize/Test.js" ,
         "TokenTest" : "./Tokens/Test.js"
     }
 }
