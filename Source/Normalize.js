@@ -9,8 +9,16 @@ export default function * normalize(tokens){
         prepareQuotedString(
         prepareMultiLines(
         prepareMultiStrings(
+        dropComments(
             tokens
-        ))));
+        )))));
+}
+
+
+function * dropComments(tokens){
+    for(const token of tokens)
+        if(![ 'MultiComment' , 'Comment' ].includes(token.type))
+            yield token;
 }
 
 
@@ -141,6 +149,13 @@ function * forwardCombine(tokens){
             if(
                 nowType === 'Space'
             ) continue;
+            
+            if(
+                nowType === 'Newline'
+            ){
+                before = { value : { type : 'Newline' } }
+                continue;
+            }
             
             if(
                 nowType === 'Colon'

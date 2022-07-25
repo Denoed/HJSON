@@ -25,7 +25,8 @@ export default function decode(string){
         
         return parse(state.object);
     } catch (e) {
-        log([ ...normalize(new Tokenizer(string).iterator()) ]);
+        for(const line of normalize(new Tokenizer(string).iterator()))
+            log(line)
         throw e;
     }
 }
@@ -55,6 +56,9 @@ function object(state){
                 key : token.value.value
             });
             break;
+        case 'Space':
+        case 'Newline':
+            continue
         default:
             throw `Invalid Object Token ${ token.value.type }`;
         }
@@ -123,7 +127,7 @@ function member(state){
                 array : []
             }
             
-            array(s);
+            toArray(s);
             
             const { value } = token.value;
             
@@ -159,7 +163,7 @@ function member(state){
 }
 
 
-function array(state){
+function toArray(state){
     
     // log('\nArray\n')
 
@@ -207,7 +211,7 @@ function array(state){
                     array : []
                 }
                 
-                array(s);
+                toArray(s);
                 
                 const { value } = token.value;
                 
